@@ -8,57 +8,62 @@ from sklearn.metrics import classification_report
 # 1. Load images and masks
 img1 = cv.imread('images/img1.png')
 img2 = cv.imread('images/img2.png')
-mask1 = cv.imread('images/mask1.png', cv.IMREAD_GRAYSCALE)
-mask2 = cv.imread('images/mask2.png', cv.IMREAD_GRAYSCALE)
-unseen = cv.imread('images/unseen_img1.png')
+mask1 = cv.imread('images/mask1.png')
+mask1 = cv.cvtColor(mask1, cv.COLOR_BGR2GRAY) #convert to grayscale to make it easier to compare later
+mask2 = cv.imread('images/mask2.png')
+mask2 = cv.cvtColor(mask2, cv.COLOR_BGR2GRAY)
+newImage = cv.imread('images/unseen_img1.png')
 
-if any(x is None for x in [img1, img2, mask1, mask2, unseen]):
-    raise FileNotFoundError("Check your image paths.")
+if any(x is None for x in [img1, img2, mask1, mask2, newImage]): #if not found
+    print("Files not found!")
 
-# 2. Select the inner green square in each image
-def crop_image(img, name):
+# 2. Select the inner green square in each image to look at the region of interest
+def crop(img, name):
     x, y, w, h = cv.selectROI(
-        name, img, showCrosshair=True, fromCenter=False
+        name, img, fromCenter=False #showCrosshair=True,
     )
     cv.destroyWindow(name)
 
-    if w == 0 or h == 0:
-        raise ValueError("You must select the inner square.")
+    if w == 0 or h == 0: #the rectagle has no width or height
+        print("Select the region to look at")
 
-    return img[y:y+h, x:x+w], (x, y, w, h)
+    cropped = img[y:y+h, x:x+w], (x, y, w, h)
+    return cropped
 
-crop1, roi1 = crop_image(img1, "Select square in img1")
-crop2, roi2 = crop_image(img2, "Select square in img2")
-crop_unseen, roi_unseen = crop_image(unseen, "Select square in unseen")
+#crop the two iamges given and the unseen all here to give results later
+crop1, region1 = crop(img1, "Select region in image 1")
+crop2, region2 = crop(img2, "Select region in imgage 2")
+cropNew, regionNew = crop(newImage, "Select square in this new image")
+
+## The masks are already cropped so not need that!
 
 def crop_mask(mask, roi):
     x, y, w, h = roi
     return mask[y:y+h, x:x+w]
 
-mask_crop1 = crop_mask(mask1, roi1)
-mask_crop2 = crop_mask(mask2, roi2)
+mask_crop1 = crop_mask(mask1, region1)
+mask_crop2 = crop_mask(mask2, region2)
 
-# 3. Generate candidate contours and extract features
-def get_candidates(img, mask=None):
+# 3. Generate contours of the images and extract features
+def getShapes(img, mask=None): #the two images have the mask to detect barnacles but the new images don't
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    edges = cv.Canny(gray, 125, 175)
+    shapes = cv.Canny(gray, 100, 200) #get the edges using Canny
 
-    contours, _ = cv.findContours(
-        edges, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
+    contours, hierarchy = cv.findContours( #trace boundaries using the edges to find shapes
+        shapes, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
     )
 
-    # Dilate annotated outlines so nearby candidates can match them.
+    # For trianing data: the mask is known for img1 and img2
+    # assumes darker pixels are the barnacle shape outlines
     if mask is not None:
-        # Based on the observed mask values (66, 80, 255):
-        # assumes darker pixels mark annotated outlines.
-        outline = (mask < 200).astype(np.uint8)
-        outline = cv.dilate(
-            outline, np.ones((7, 7), np.uint8)
-        )
+        outline = (mask < 200).astype(np.uint8) #determine if there is a barnacle based on pixel brightness since outline is darker
+        outline = cv.dilate(outline, np.ones((7, 7), np.uint8)) #make the region thicker so its easier to overlap and compare with later
 
-    candidates = []
+    #Extract features for each contour found: area, circularity, average color, deviation in color,
+    # average gray color, deviation in that brightness, and the number of edges detected
+    data = []
     features = []
-    labels = []
+    label = []
 
     for contour in contours:
         area = cv.contourArea(contour)
@@ -67,59 +72,61 @@ def get_candidates(img, mask=None):
         if area < 30 or area > img.shape[0] * img.shape[1] * 0.1:
             continue
 
-        x, y, w, h = cv.boundingRect(contour)
+        x, y, w, h = cv.boundingRect(contour) #make rectangle so easier to capture
 
         if w < 2 or h < 2:
-            continue
+             continue
 
         # Features: size, shape, color, brightness, and edge density
-        patch = img[y:y+h, x:x+w]
-        gray_patch = gray[y:y+h, x:x+w]
-        edge_patch = edges[y:y+h, x:x+w]
+        shape = img[y:y+h, x:x+w]
+        grayPart = gray[y:y+h, x:x+w]
+        edgePart = shapes[y:y+h, x:x+w] #edge or not
 
         perimeter = cv.arcLength(contour, True)
+
         circularity = 0
         if perimeter > 0:
-            circularity = 4 * np.pi * area / (perimeter ** 2)
+            circularity = 4 * np.pi * area / (perimeter ** 2) #look at how close to a circle
 
         features.append([
             area,
             w / h,
             circularity,
-            *np.mean(patch, axis=(0, 1)),
-            *np.std(patch, axis=(0, 1)),
-            np.mean(gray_patch),
-            np.std(gray_patch),
-            np.mean(edge_patch > 0)
+            *np.mean(shape, axis=(0, 1)),
+            *np.std(shape, axis=(0, 1)),
+            np.mean(grayPart),
+            np.std(grayPart),
+            np.mean(edgePart > 0)
         ])
 
-        candidates.append(contour)
+        data.append(contour)
 
+            # Determine the y labael based on overlap with annotated outlines
         if mask is not None:
-            # Approximate label based on overlap with annotated outlines
-            outline_region = outline[y:y+h, x:x+w]
-            overlap = np.mean(outline_region > 0)
-            labels.append(1 if overlap > 0.02 else 0)
+            outlineRegion = outline[y:y+h, x:x+w]
+            overlap = np.mean(outlineRegion > 0)
+            label.append(1 if overlap > 0.02 else 0)
 
-    return candidates, np.array(features), (
-        np.array(labels) if mask is not None else None
+    return data, np.array(features), (
+        np.array(label) if mask is not None else None
     )
 
-contours1, X1, y1 = get_candidates(crop1, mask_crop1)
-contours2, X2, y2 = get_candidates(crop2, mask_crop2)
+contours1, X1, y1 = getShapes(crop1, mask_crop1)
+contours2, X2, y2 = getShapes(crop2, mask_crop2)
 
-print("Candidates in image 1:", len(X1))
+print("Shapes in image 1:", len(X1))
 print("Training labels:", np.unique(y1, return_counts=True))
-print("Candidates in image 2:", len(X2))
+print("CandShapesidates in image 2:", len(X2))
 print("Testing labels:", np.unique(y2, return_counts=True))
 
 # 4. Train on image 1 and evaluate on image 2
-if len(np.unique(y1)) < 2:
-    raise ValueError(
-        "Training data has only one class. "
-        "Verify the mask colors and candidate labels."
-    )
+# if len(np.unique(y1)) < 2:
+#     raise ValueError(
+#         "Training data has only one class. "
+#         "Verify the mask colors and candidate labels."
+#     )
 
+#Implement random forest classifier
 model = RandomForestClassifier(
     n_estimators=100,
     class_weight='balanced',
@@ -146,8 +153,10 @@ if len(np.unique(y_train)) < 2:
 
 model.fit(X_train, y_train)
 
+
+
 # Extract unseen-image candidates
-contours_unseen, X_unseen, _ = get_candidates(crop_unseen)
+contours_unseen, X_unseen, _ = getShapes(newImage)
 pred_unseen = model.predict(X_unseen)
 
 # 6. Count predicted barnacle candidates
@@ -159,7 +168,7 @@ barnacle_contours = [
 print("\nPredicted barnacle candidates:", len(barnacle_contours))
 
 # 7. Visualize detections
-result = crop_unseen.copy()
+result = cropNew.copy()
 cv.drawContours(result, barnacle_contours, -1, (0, 255, 0), 2)
 
 plt.figure(figsize=(12, 6))

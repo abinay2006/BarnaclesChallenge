@@ -72,9 +72,32 @@ def prepare_annotated_region(img, mask, title):
     mask_crop = mask[y1:y2, x1:x2]
 
     # show
+    overlay = image_crop.copy()
+
+    annotation_pixels = mask_crop < 200
+    overlay[annotation_pixels] = (0, 0, 255)
+
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
-    cv.imshow((image_crop, cv.COLOR_BGR2RGB))
+    axes[0].imshow(
+        cv.cvtColor(image_crop, cv.COLOR_BGR2RGB)
+    )
+    axes[0].set_title("Image crop")
+
+    axes[1].imshow(mask_crop, cmap="gray")
+    axes[1].set_title("Mask annotations")
+
+    axes[2].imshow(
+        cv.cvtColor(overlay, cv.COLOR_BGR2RGB)
+    )
+    axes[2].set_title("Red = annotation pixels")
+
+    for ax in axes:
+        ax.axis("off")
+
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.show()
 
     return image_crop, mask_crop
 
@@ -92,70 +115,138 @@ crop2, maskCrop2 = prepare_annotated_region(
 # 3. DETECT CANDIDATE SHAPES AND EXTRACT FEATURES
 # --------------------------------------------------
 
-# 3. Generate contours of the images and extract features
-def getShapes(img, mask=None): #the two images have the mask to detect barnacles but the new images don't
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    edges = cv.Canny(gray, 100, 200) #get the edges using Canny
+def getShapes(img, mask=None):
 
-    contours, hierarchy = cv.findContours( #trace boundaries using the edges to find shapes
-        edges, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
+    # Convert to grayscale for edge detection
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    # Detect edges
+    edges = cv.Canny(gray, 100, 200)
+
+    # Find contours around edges
+    contours, hierarchy = cv.findContours(
+        edges,
+        cv.RETR_LIST,
+        cv.CHAIN_APPROX_SIMPLE
     )
 
-    # For trianing data: the mask is known for img1 and img2
-    # assumes darker pixels are the barnacle shape outlines
+    # Prepare annotation pixels if a mask is provided
     if mask is not None:
-        outline = (mask < 200).astype(np.uint8) #determine if there is a barnacle based on pixel brightness since outline is darker
-        outline = cv.dilate(outline, np.ones((7, 7), np.uint8)) #make the region thicker so its easier to overlap and compare with later
 
-    #Extract features for each contour found: area, circularity, average color, deviation in color,
-    # average gray color, deviation in that brightness, and the number of edges detected
+        annotation = (mask < 200).astype(np.uint8)
+
+        # Thicken thin annotation outlines slightly
+        kernel = np.ones((7, 7), np.uint8)
+        annotation = cv.dilate(annotation, kernel)
+
     data = []
     features = []
-    label = []
+    labels = []
 
     for contour in contours:
+
         area = cv.contourArea(contour)
 
-        # Ignore tiny contours and very large regions so doesnt double count
-        if area < 30 or area > img.shape[0] * img.shape[1] * 0.1:
+        # Ignore very small and extremely large contours
+        if area < 30:
             continue
 
-        x, y, w, h = cv.boundingRect(contour) #make rectangle so easier to capture
+        if area > img.shape[0] * img.shape[1] * 0.1:
+            continue
 
-        # Features
-        oneShape = img[y:y+h, x:x+w] #color
-        grayPart = gray[y:y+h, x:x+w] #gray
-        edgePart = edges[y:y+h, x:x+w] #edge or not
+        # Get the rectangle surrounding this contour
+        x, y, w, h = cv.boundingRect(contour)
 
+        # Extract the corresponding image regions
+        colorPart = img[y:y+h, x:x+w]
+        grayPart = gray[y:y+h, x:x+w]
+        edgePart = edges[y:y+h, x:x+w]
+
+        # Calculate shape features
         perimeter = cv.arcLength(contour, True)
 
         circularity = 0
-        if perimeter > 0:
-            circularity = 4 * np.pi * area / (perimeter ** 2) #look at how close to a circle
 
+        if perimeter > 0:
+            circularity = (
+                4 * np.pi * area / (perimeter ** 2)
+            )
+
+        # Calculate color and edge features
+        meanColor = np.mean(colorPart, axis=(0, 1))
+        grayMean = np.mean(grayPart)
+        edgeDensity = np.mean(edgePart > 0)
+
+        # Feature vector:
+        # area, circularity, B, G, R, grayscale mean, edge density
         features.append([
             area,
             circularity,
-            *np.mean(oneShape, axis=(0, 1)),
-            np.mean(grayPart),
-            np.mean(edgePart > 0)
+            *meanColor,
+            grayMean,
+            edgeDensity
         ])
 
         data.append(contour)
 
-        # Determine the y labael based on overlap with annotated outlines
+        # Generate an approximate label from the mask
         if mask is not None:
-            outlineRegion = outline[y:y+h, x:x+w]
-            overlap = np.mean(outlineRegion > 0)
-            label.append(1 if overlap > 0.02 else 0)
 
-    return data, np.array(features), (
-        np.array(label) if mask is not None else None
+            annotationPart = annotation[y:y+h, x:x+w]
+
+            # Fraction of the candidate's bounding box that
+            # overlaps the dilated annotation outlines
+            overlap = np.mean(annotationPart > 0)
+
+            # Approximate labels:
+            # 1 = overlaps annotation outlines
+            # 0 = does not overlap enough
+            labels.append(1 if overlap > 0.02 else 0)
+
+    return (
+        data,
+        np.array(features, dtype=np.float32),
+        np.array(labels, dtype=np.int32) if mask is not None else None
     )
+
 
 # Generate candidate shapes and labels
 contours1, X1, y1 = getShapes(crop1, maskCrop1)
 contours2, X2, y2 = getShapes(crop2, maskCrop2)
+
+print("\nCandidate counts")
+print("Image 1:", len(contours1))
+print("Image 2:", len(contours2))
+
+print("\nImage 1 label distribution:")
+print(np.unique(y1, return_counts=True))
+
+print("\nImage 2 label distribution:")
+print(np.unique(y2, return_counts=True))
+
+
+# --------------------------------------------------
+# 4. CHECK THAT TRAINING DATA IS USABLE
+# --------------------------------------------------
+
+if len(X1) == 0 or len(X2) == 0:
+    raise ValueError(
+        "No candidate shapes were detected. "
+        "Try adjusting the Canny thresholds or area filters."
+    )
+
+if len(np.unique(y1)) < 2:
+    raise ValueError(
+        "Image 1 contains only one generated label class. "
+        "The classifier needs positive and negative examples."
+    )
+
+if len(np.unique(y2)) < 2:
+    print(
+        "\nWARNING: Image 2 contains only one generated label class. "
+        "The evaluation may be misleading."
+    )
+
 
 # --------------------------------------------------
 # 5. TRAIN ON IMAGE 1 AND EVALUATE ON IMAGE 2

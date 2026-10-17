@@ -12,10 +12,11 @@ mask1 = cv.imread('images/mask1.png')
 mask1 = cv.cvtColor(mask1, cv.COLOR_BGR2GRAY) #convert to grayscale to make it easier to compare later
 mask2 = cv.imread('images/mask2.png')
 mask2 = cv.cvtColor(mask2, cv.COLOR_BGR2GRAY)
-newImage = cv.imread('images/unseen_img1.png')
+newImage1 = cv.imread('images/unseen_img1.png')
+newImage2 = cv.imread('images/unseen_img2.png')
 
 
-if any(x is None for x in [img1, img2, mask1, mask2, newImage]): #if not found
+if any(x is None for x in [img1, img2, mask1, mask2, newImage1, newImage2]): #if not found
     raise cv.error("Files not found!")
 
 # 2. Select the inner green square in each image to look at the region of interest
@@ -33,7 +34,6 @@ def crop(img, name):
 #crop the two iamges given and the unseen all here to give results later
 crop1, region1 = crop(img1, "Select region in image 1")
 crop2, region2 = crop(img2, "Select region in imgage 2")
-cropNew, regionNew = crop(newImage, "Select square in this new image")
 
 ## The masks are already cropped but may not align with user cropping so make sure it matches
 def cropMask(mask, roi):
@@ -128,31 +128,53 @@ print(classification_report(
 ))
 
 # 5. Train on both labeled images for the unseen image
-X_train = np.vstack([X1, X2])
+x_train = np.vstack([X1, X2])
 y_train = np.concatenate([y1, y2])
 
-model.fit(X_train, y_train)
+model.fit(x_train, y_train)
 
 
 
 # Extract unseen-image candidates
-contoursNew, featuresNew, yLabel = getShapes(cropNew)
-predNew = model.predict(featuresNew)
+cropNew1, regionNew1 = crop(newImage1, "Select square in this new image 1")
+cropNew2, regionNew2 = crop(newImage2, "Select square in this new image 2")
+
+ 
+contoursNew1, featuresNew1, yLabel1 = getShapes(cropNew1)
+predNew1 = model.predict(featuresNew1)
+
+contoursNew2, featuresNew2, yLabel2 = getShapes(cropNew2)
+predNew2 = model.predict(featuresNew2)
 
 # 6. Count predicted barnacle candidates
-barnacleContours = [
-    contour for contour, label in zip(contoursNew, predNew)
+barnacleContours1 = [
+    contour for contour, label in zip(contoursNew1, predNew1)
     if label == 1
 ]
-
-print("\nPredicted barnacles:", len(barnacleContours))
+barnacleContours2 = [
+    contour for contour, label in zip(contoursNew2, predNew2)
+    if label == 1
+]
+print("\nPredicted barnacles in unseen img1:", len(barnacleContours1))
+print("\nPredicted barnacles in unseen img2:", len(barnacleContours2))
 
 # 7. Visualize detections
-result = cropNew.copy()
-cv.drawContours(result, barnacleContours, -1, (255, 0, 0), 2) #show in blue
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+result1 = cropNew1.copy()
+result2 = cropNew2.copy()
+cv.drawContours(result1, barnacleContours1, -1, (255, 0, 0), 2) 
+cv.drawContours(result2, barnacleContours2, -1, (255, 0, 0), 2) 
 
-plt.figure(figsize=(12, 6))
-plt.imshow(cv.cvtColor(result, cv.COLOR_BGR2RGB))
-plt.title(f"Predicted barnacles: {len(barnacleContours)}")
-plt.axis("off")
+axes[0].imshow(cv.cvtColor(result1, cv.COLOR_BGR2RGB))
+axes[0].set_title(f"Predicted barnacles: {len(barnacleContours1)}")
+
+axes[1].imshow(cv.cvtColor(result2, cv.COLOR_BGR2RGB))
+axes[1].set_title(f"Predicted barnacles: {len(barnacleContours2)}")
+
+for ax in axes:
+    ax.axis("off")
+
+plt.suptitle("Unseen image predictions")
+plt.tight_layout()
 plt.show()
+

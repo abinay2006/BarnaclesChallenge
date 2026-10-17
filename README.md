@@ -1,52 +1,15 @@
 ## DALI Barnacles Challenge
 
-Automatic detection of barnacles from an image using OpenCV and Machine Learning
-Why do you want to work at DALI?*  (200 words)
-I am very interested in DALI because it offers the opportunity to work on impactful projects from ideation to completion. As an engineering major, I enjoy developing solutions to real-world problems, and I am excited about collaborating with teammates from diverse disciplines.
-
-I also really value DALI’s focus on technology and commitment to prioritizing it to enhance learning, increase impact, and optimize decision-making. DALI aligns well with my goals because, as I have previously worked on various projects that use AI and other technological tools to address issues like fake news. These experiences have shown me the importance of effectively leveraging technology to increase reliability and guide both present and future decisions. I am excited to keep developing my technical skills and cotnribute to the innovative culture at DALI.
-
-I also enjoy learning new things and working with others. I am drawn to DALI’s collaborative culture and focus on addressing community challenges. At DALI, I am excited to continue learning how to approach complex challenges while contributing to projects that genuinely interest me. I also look forward to learning from my peers and participating in  events like Technigala.
-
-
-Tell us about something you’ve made. What did you love about making it, and where did you stumble?*  (200 words)
-
-One project I loved making was a MIDI synthesizer using an FPGA board. The system translated inputs from a MIDI keyboard into sound, combining digital logic, serial communication, and sound generation.
-
-I found this project particularly rewarding because it allowed me to apply many concepts I had learned previously and see how they all came together to create something interactive. After implementing all the components, it was satisfying to see the final product function properly after combining various code files, simulations, and testing. I also greatly enjoyed learning new tools that the project required beyond what I already knew.
-
-One of my biggest challenges was learning to work with IP cores I had no experience with, and that required a deeper understanding to integrate correctly. After spending hours learning, we were eventually able to implement them successfully. This knowledge became especially important when we encountered issues during our demo. Because I understood how the different parts of the system interacted, I was able to troubleshoot the problem effectively.
-
-Ultimately, this project made me appreciate the process of turning an idea into something tangible. I greatly enjoyed the technical problem-solving and the opportunity to learn concepts beyond the classroom.
-
-Tell us about a time you worked with others. What made the experience work well, and what would you have done differently?* (200 words)
-
-During an IBM Watsonx hackathon, I collaborated with my team to develop an AI-powered content moderation app designed to help social media moderators. As the co-lead developer and lead UI designer, I was involved with working on the application's functionality and user interface.
-
-Our team worked rally well due to strong communication and willingness to help each other learn rather than just focusing on individual responsibilities. For instance, when I needed to get information through MCP servers for our application, a teammate helped me understand how they worked and how to use them. This allowed me to apply a new concept to my own work, and it reinforced how much more we could accomplish by sharing our knowledge. I appreciated that we could rely on one another's strengths and develop new skills ourselves.
-
-Looking back, I wish we had been more thorough in our brainstorming at the beginning. Some team members proposed important additions toward the end, and implementing them so late made the process even more stressful. In the future, I would focus more on getting ideas more openly from the beginning so we can make the most of everyone's ideas and have enough time to implement them well.
-
-
-What else are you involved in on campus? Please briefly share your other major commitments (classes, clubs, jobs, research, athletics, etc.).*  (200 words)
-
-My major commitments are classes, clubs, and research. Alongside my coursework in Computer Engineering, I am involved in research projects at the intersection of business and technology, where I use statistical analysis and machine learning. Additionally, I am involved in Dartmouth Tech Consulting Club, Dartmouth Undergradute Journal of Science, and club Table Tennis. My schedule is manageable, and I have the flexibility to dedicate consistent time to DALI and actively contribute to projects.
-
-Data Development
-https://os.dali.dartmouth.edu/documents/cmuva04g407lrj4pxhhzwwaqu/public
-
-
-
 Initial Brainstorming:
 
 The main problem presented by the scientist is the high effort and time it takes to manually count the barnacles in an image. Thus, we can automate this process using image analysis tools, such as OpenCV and machine learning algorithms. 
 
-Use OpenCV to break down the image by first cropping to the desired portion (inside the green border), 
-Determining the contours presented in the image 
-Develop a characteristic dataset with features like the shape, color, and edges
-Use the masked image to generate labels - determine if a contour is actually a barnacle or not depending on whether the masks has a barnacle there or not
-Once have the x (features) and y (labels) in the dataset has been created, I will implement Random Forest to train the model to determine whether something is a barnacle or not using the two datapoint (image 1 and image 2) 
-Test the ML model on the unseen images to determine the number of barnacles present
+- Use OpenCV to break down the image by first cropping to the desired portion (inside the green border), 
+- Determining the contours presented in the image 
+- Develop a characteristic dataset with features like the shape, color, and edges
+- Use the masked image to generate labels - determine if a contour is actually a barnacle or not depending on whether the masks has a barnacle there or not
+- Once have the x (features) and y (labels) in the dataset has been created, I will implement Random Forest to train the model to determine whether something is a barnacle or not using the two datapoint (image 1 and image 2) 
+- Test the ML model on the unseen images to determine the number of barnacles present
 
 
 Subtasks

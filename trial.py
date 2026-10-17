@@ -22,7 +22,7 @@ if any(x is None for x in [img1, img2, mask1, mask2, newImage1, newImage2]): #if
 # 2. Select the inner green square in each image to look at the region of interest
 def crop(img, name):
     x, y, w, h = cv.selectROI(
-        name, img, fromCenter=False #showCrosshair=True,
+        name, img, fromCenter=False 
     )
     cv.destroyWindow(name)
 
@@ -43,21 +43,20 @@ def cropMask(mask, roi):
 maskCrop1 = cropMask(mask1, region1)
 maskCrop2 = cropMask(mask2, region2)
 
+
 # 3. Generate contours of the images and extract features
 def getShapes(img, mask=None): #the two images have the mask to detect barnacles but the new images don't
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     edges = cv.Canny(gray, 100, 200) #get the edges using Canny
 
-    contours, hierarchy = cv.findContours( #trace boundaries using the edges to find shapes
-        edges, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE
-    )
+    #trace boundaries using the edges to find shapes
+    contours, hierarchy = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 
     # For trianing data: the mask is known for img1 and img2
     # assume darker pixels are the barnacle shape outlines
     if mask is not None:
         outline = (mask < 200).astype(np.uint8) #determine if there is a barnacle based on pixel brightness since outline is darker
         outline = cv.dilate(outline, np.ones((7, 7), np.uint8)) #make the outline on masks thicker so its easier to overlap and compare with later
-
     #Extract features for each contour found: area, circularity, mean color, mean gray brightness, and the number of edges detected
     data = []
     features = []
@@ -81,7 +80,7 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
 
         circularity = 0
         if perimeter > 0:
-            circularity = 4 * np.pi * area / (perimeter ** 2) #look at how close to a circle
+            circularity = 4*np.pi*area/(perimeter**2) #look at how close to a circle
 
         features.append([
             area,
@@ -106,7 +105,6 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
 contours1, X1, y1 = getShapes(crop1, maskCrop1)
 contours2, X2, y2 = getShapes(crop2, maskCrop2)
 
-
 # 4. Train on image 1 and evaluate on image 2 to check the metrics
 
 #Implement random forest classifier
@@ -126,13 +124,24 @@ print(classification_report(
     target_names=['Background', 'Barnacle'],
     zero_division=0
 ))
+#show visualization of image 2
+showLabels = crop2.copy()
+
+labeledBarnacles = [
+    contour for contour, label in zip(contours2, pred2)
+    if label == 1
+]
+
+cv.drawContours(showLabels, labeledBarnacles, -1, (255, 0, 0), 2)
+
+cv.imshow(f"Predicted barnacles: {len(labeledBarnacles)}",showLabels)
+cv.waitKey(0)
 
 # 5. Train on both labeled images for the unseen image
 x_train = np.vstack([X1, X2])
 y_train = np.concatenate([y1, y2])
 
 model.fit(x_train, y_train)
-
 
 
 # Extract unseen-image candidates

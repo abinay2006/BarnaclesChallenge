@@ -91,6 +91,15 @@ We also have other unseen images that we can use the model to predict the number
 	- For images with bad lighting or blurry images, a human can better identify missed barnacles.
 	- If specific information about barnacle measurements or their clustering behavior is known, it could be added as an additional factor for the model to consider and test.
 
+## Limitations
+
+- The approach may perform differently across images due to variations in barnacle appearance, image quality, lighting, and background texture.
+- The approach may miss barnacles with faint or overlapping edges because the classifier can only identify candidates detected by OpenCV in contour detection.
+- It might be overcounting some of the barnacle because of irregular edges and nested boundaries.
+- While training the ML model, I considered the overlap of 5% for each candidate with the mask provided but this might accidentally think of background as barnacle if it overlaps with the thick outlines. Also other rocks similar to barnacle might be counted as barnacle.
+- The current code requires manual interaction during image cropping, so it is not yet fully automated.
+- Limited training data: it is trained on only two annotated images. With this it might not be able to fully understand all the barnacle features well, making it less reliable on images with different lighting, textures, or barnacle distributions.
+
 # 6. Learning Process
 I greatly enjoyed working on this project and learned a lot of new things in the process. I was particularly excited to learn more about OpenCV functionality and see how it works. For example, I had not used the selectROI function before, but using it for this project made me realize its usefulness and importance, and I will implement it in future projects. 
 

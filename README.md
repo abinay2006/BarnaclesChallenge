@@ -2,8 +2,9 @@
 This project uses computer vision and machine learning approach to automating barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies a machine learning classifier to distinguish the barnacle from surrounding. 
 
 # Files 
+- Images: All the images given of the barnacles and the masks
 - trial.py — Main script that runs the image processing, feature extraction, classification, and visualization.
-- All the images given of the barnacles and the masks
+  
 
 # Requirenments 
 - Python

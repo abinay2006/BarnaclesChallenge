@@ -54,7 +54,7 @@ Since we were only provided with two masked images, the machine learning algorit
 After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2
  is shown below.
 
-   ## Performance on Image 2: ##
+   <p><small> Performance on Image 2: <small><p>
    
 <img width="697" height="393" alt="Screenshot 2026-10-18 at 2 32 16 AM" src="https://github.com/user-attachments/assets/abaffae5-b829-450d-bddf-380e21dca342" />
 

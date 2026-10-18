@@ -1,5 +1,5 @@
 # DALI Barnacles Challenge
-This project uses computer vision and machine learning approach to automate barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies a machine learning classifier to distinguish the barnacle from the surroundings. 
+This project uses computer vision and machine learning approach to automate barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies the Random Forest machine learning classifier to distinguish the barnacle from the surroundings. 
 
 # Files 
 - Images: All the images given of the barnacles and the masks

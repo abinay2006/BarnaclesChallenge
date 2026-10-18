@@ -20,9 +20,9 @@ pip install opencv-python numpy scikit-learn matplotlib
 # How to run 
 1. Clone or download the repository.
 2. Install the dependencies listed above.
-3. Ensure the input images and any required reference masks are available at the paths specified in trial.py.
-4. Run on terminal using "python trial.py"
-5. When an image window appears, select the region of interest by dragging a blue square, then press Enter to continue. Repeat this process for additional images if given.
+3. Make sure that the images are available at the path specified in trial.py.
+4. Run on terminal using this line: "python trial.py"
+5. When an image window appears, select the region of interest by dragging a blue square, then press Enter to continue. Repeat this process for all images given.
 
 The trial.py file contains all the code to run this prototype. The output of this file provides the barnacle detection and accuracy for img2 as well as the predicted barnacle count and possible candidate barnacle highlighted for the two unseen images given (unseen_img1 and unseen_img2). 
 

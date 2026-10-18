@@ -20,7 +20,7 @@ This project uses computer vision and machine learning approach to automating ba
 4. Run on terminal using "python trial.py"
 5. When an image window appears, select the region of interest by dragging a blue square, then press Enter to continue. Repeat this process for additional images if given.
 
-The trial.py file contains all the code to run this prototype. The output of this file provides the barnacle deteciton and accuracy for img2 as well as the predicted barnacle count and possible candidate barnacles hihglighed for the two unseen images given (unseen_img1 and unseen_img2). 
+The trial.py file contains all the code to run this prototype. The output of this file provides the barnacle deteciton and accuracy for img2 as well as the predicted barnacle count and possible candidate barnacle highlighted for the two unseen images given (unseen_img1 and unseen_img2). 
 
 # 1. Initial Brainstorming
 

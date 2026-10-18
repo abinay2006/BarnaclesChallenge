@@ -30,12 +30,7 @@ The trial.py file contains all the code to run this prototype. The output of thi
 
 The main problem presented by the scientist is the high effort and time it takes to manually count the barnacles in an image. Thus, we can automate this process using image analysis tools, such as OpenCV and machine learning algorithms. 
 
-- Use OpenCV to break down the image by first cropping to the desired portion (inside the green border), 
-- Determining the contours presented in the image 
-- Develop a characteristic dataset with features like the shape, color, and edges
-- Use the masked image to generate labels - determine if a contour is actually a barnacle or not depending on whether the masks has a barnacle there or not
-- Once have the x (features) and y (labels) in the dataset has been created, I will implement Random Forest to train the model to determine whether something is a barnacle or not using the two datapoint (image 1 and image 2) 
-- Test the ML model on the unseen images to determine the number of barnacles present
+I will develop a semi-autonomous system to detect the barnacles. To do so, I will first use OpenCV to break down the image and crop to the desired portion (inside the green border). Then I will Determining the different shapes present in the image and look at each of them for different characteristics like the shape, color, and texture. Then, using the masked image provided, I will generate the output label of whether a particular shape is barnacle or not. This will be used to train the supervised Machine Learning algorithm. Finally, I will test the ML model on the image provided to see its performance and then also test on the unseen images to determine the number of barnacles present there.
 
 # 2. Subtasks
 
@@ -56,8 +51,9 @@ Since we were only provided with two masked images, the machine learning algorit
 
 # 4. Prototype Analysis
 
-After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2
- is shown below.
+My prototype demonstrates that this semi-autonomous approach of combining computer vision techniques with machine learning is worth pursuing to automate parts of barnacle image analysis. We can see that by extracting features such as area, circularity, color, grayscale intensity, and edge density, the algorithm has key characteristics to distinguish between regions. However, it’s important to note that the performance varies across images and the way the images are cropped using the selectROI method.
+
+After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2 is shown below.
 
    ## Performance on image 2: ##
    
@@ -67,7 +63,7 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
    
 <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 
-Focusing on the row with Barnacle detection performance, we can see that the model’s accuracy is not that high at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. 
+Focusing on the row with Barnacle detection performance, we can see that the model’s accuracy is at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. 
 
 We can also visually see that the ML algorithm performed worse at identifying abrnacles than the actual labeled dataset. This is probably because we trained the model on only one data point, image 1. But if we add more data, accuracy will also increase. 
 

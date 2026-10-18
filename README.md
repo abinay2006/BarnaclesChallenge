@@ -1,4 +1,4 @@
-## DALI Barnacles Challenge ##
+# DALI Barnacles Challenge
 This project uses computer vision and machine learning approach to automating barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies a machine learning classifier to distinguish the barnacle from surrounding. 
 
 # Files #
@@ -32,11 +32,11 @@ The main problem presented by the scientist is the high effort and time it takes
 - Once have the x (features) and y (labels) in the dataset has been created, I will implement Random Forest to train the model to determine whether something is a barnacle or not using the two datapoint (image 1 and image 2) 
 - Test the ML model on the unseen images to determine the number of barnacles present
 
-# 2. Subtasks:#
+# 2. Subtasks:
 
 <img width="611" height="628" alt="Screenshot 2026-10-18 at 1 42 58 AM" src="https://github.com/user-attachments/assets/13348920-a327-48ac-b874-5959ecd28d3c" />
 
-# 3.Specific subtask and its performance #
+# 3. Specific subtask and its performance 
 
 A key step in building this model is the machine learning classification model that will be used to classify future unseen images and determine the number of barnacles. The ML model will use the dataset of features and labels created by img1 and img 2 to train on whether something is a barnacle or not and use it to count barnacles in unseen images in later stages.
 
@@ -49,15 +49,17 @@ After running the model on unseen data, I can manually compare how many barnacle
 
 Since we were only provided with two masked images, the machine learning algorithm has very limited data, so it will not perform that well. We can still calculate precision, recall, and F1 by training on img 1 and testing on img 2 because we can create output labels for both. However, this is very limited data, and having more would improve accuracy and lead to better predictions.
 
-# 4.Prototype Analysis: #
+# 4. Prototype Analysis: 
 
 After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2
  is shown below.
 
    Performance on Image 2:
+   
    <img width="489" height="276" alt="Screenshot 2026-10-18 at 1 46 37 AM" src="https://github.com/user-attachments/assets/552aa4e7-380b-4c98-b9ba-fa8c03f33807" />
 
-   Evaluation on image 2:
+   Evaluation on image 2: 
+   
    <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 
 Focusing on the row with Barnacle detection performance, we can see that the model’s accuracy is not that high at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. 
@@ -67,9 +69,10 @@ We can also visually see that the ML algorithm performed worse at identifying ab
 We also have other unseen images that we can use the model to predict the number of barnacles in. However, we can't evaluate performance because we don’t have the labels (or masks) for them. Based on training on two data points (img1 and img2), my model predicted 821 barnacles for unseen image 1 and 96 barnacles for unseen image 2.
 	
 	Prediction on unseen images:
-	<img width="927" height="474" alt="Screenshot 2026-10-18 at 1 48 35 AM" src="https://github.com/user-attachments/assets/68fba1af-6aff-4f85-9859-b472858b2a85" />
 
-# 5. Conclusion #
+	<img width="876" height="457" alt="Screenshot 2026-10-18 at 2 23 24 AM" src="https://github.com/user-attachments/assets/82d02cec-6280-4d1e-8559-66f0bc7eb95d" />
+
+# 5. Conclusion
 - Barnacles have specific features that can be used as data points for their identification, including their circularity, color, brightness, and number of edges. 
 - To scale up this project, automation of a highly accurate model would be needed.
 - A few issues with my model making it hard to pursue
@@ -87,7 +90,7 @@ We also have other unseen images that we can use the model to predict the number
 	- For images with bad lighting or blurry images, a human can better identify missed barnacles.
 	- If specific information about barnacle measurements or their clustering behavior is known, it could be added as an additional factor for the model to consider and test.
 
-# 6. Learning Process #
+# 6. Learning Process
 I greatly enjoyed working on this project and learned a lot of new things in the process. I was particularly excited to learn more about OpenCV functionality and see how it works. For example, I had not used the selectROI function before, but using it for this project made me realize its usefulness and importance, and I will implement it in future projects. 
 
 Additionally, I greatly enjoyed learning about implementing machine learning with scikit-learn in Python. Previously, my experience with ML algorithms was mostly restricted to the R programming language. But through this project, I realized how accessible and fun Python libraries are, and how they can solve even more complex problems because of the wide array of features available in libraries like scikit-learn.

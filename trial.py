@@ -95,7 +95,7 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
         # Determine the y labael based on overlap with annotated outlines
         if mask is not None:
             outlineRegion = outline[y:y+h, x:x+w] #get the appropridate region of mask for each contour
-            overlap = np.mean(outlineRegion > 0) #is there a outline line there? possible barnacle!
+            overlap = np.mean(outlineRegion > 0) #see if there is there a outline line there?
             label.append(1 if overlap > 0.05 else 0)
 
     return data, np.array(features), (

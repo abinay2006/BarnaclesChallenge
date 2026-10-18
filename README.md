@@ -56,11 +56,11 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
 
    Performance on Image 2:
    
-   <img width="489" height="276" alt="Screenshot 2026-10-18 at 1 46 37 AM" src="https://github.com/user-attachments/assets/552aa4e7-380b-4c98-b9ba-fa8c03f33807" />
+<img width="879" height="496" alt="Screenshot 2026-10-18 at 2 31 39 AM" src="https://github.com/user-attachments/assets/b6cc1d0b-f469-4041-b187-cf9621c30fb2" />
 
    Evaluation on image 2: 
    
-   <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
+<img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 
 Focusing on the row with Barnacle detection performance, we can see that the model’s accuracy is not that high at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. 
 
@@ -68,9 +68,9 @@ We can also visually see that the ML algorithm performed worse at identifying ab
 
 We also have other unseen images that we can use the model to predict the number of barnacles in. However, we can't evaluate performance because we don’t have the labels (or masks) for them. Based on training on two data points (img1 and img2), my model predicted 821 barnacles for unseen image 1 and 96 barnacles for unseen image 2.
 	
-	Prediction on unseen images:
+	Prediction on unseen images:	
+<img width="817" height="421" alt="Screenshot 2026-10-18 at 2 31 12 AM" src="https://github.com/user-attachments/assets/95e6e267-2f92-4f8e-a3e2-3b32ef2ab6c1" />
 
-<img width="1014" height="523" alt="Screenshot 2026-10-18 at 2 29 22 AM" src="https://github.com/user-attachments/assets/a67a38b1-09d5-4114-9c94-446163a1b828" />
 
 # 5. Conclusion
 - Barnacles have specific features that can be used as data points for their identification, including their circularity, color, brightness, and number of edges. 

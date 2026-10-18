@@ -1,12 +1,12 @@
 # DALI Barnacles Challenge
-This project uses computer vision and machine learning approach to automating barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies a machine learning classifier to distinguish the barnacle from surrounding. 
+This project uses computer vision and machine learning approach to automate barnacle image analysis. It uses image processing techniques to identify barnacle regions and extract features, then applies a machine learning classifier to distinguish the barnacle from the surroundings. 
 
 # Files 
 - Images: All the images given of the barnacles and the masks
 - trial.py — Main script that runs the image processing, feature extraction, classification, and visualization.
   
 
-# Requirenments 
+# Requirements 
 - Python
 - OpenCV (opencv-python)
 - NumPy
@@ -20,7 +20,7 @@ This project uses computer vision and machine learning approach to automating ba
 4. Run on terminal using "python trial.py"
 5. When an image window appears, select the region of interest by dragging a blue square, then press Enter to continue. Repeat this process for additional images if given.
 
-The trial.py file contains all the code to run this prototype. The output of this file provides the barnacle deteciton and accuracy for img2 as well as the predicted barnacle count and possible candidate barnacle highlighted for the two unseen images given (unseen_img1 and unseen_img2). 
+The trial.py file contains all the code to run this prototype. The output of this file provides the barnacle detection and accuracy for img2 as well as the predicted barnacle count and possible candidate barnacle highlighted for the two unseen images given (unseen_img1 and unseen_img2). 
 
 # 1. Initial Brainstorming
 
@@ -35,8 +35,7 @@ The main problem presented by the scientist is the high effort and time it takes
 
 # 2. Subtasks
 
-<img width="611" height="628" alt="Screenshot 2026-10-18 at 1 42 58 AM" src="https://github.com/user-attachments/assets/13348920-a327-48ac-b874-5959ecd28d3c" />
-
+<img width="626" height="683" alt="Screenshot 2026-10-18 at 4 19 22 PM" src="https://github.com/user-attachments/assets/6d423f54-65fe-46e7-956c-5a20877edc10"/>
 # 3. Specific subtask and its performance 
 
 A key step in building this model is the machine learning classification model that will be used to classify future unseen images and determine the number of barnacles. The ML model will use the dataset of features and labels created by img1 and img 2 to train on whether something is a barnacle or not and use it to count barnacles in unseen images in later stages.
@@ -96,7 +95,7 @@ We also have other unseen images that we can use the model to predict the number
 - The approach may perform differently across images due to variations in barnacle appearance, image quality, lighting, and background texture.
 - The approach may miss barnacles with faint or overlapping edges because the classifier can only identify candidates detected by OpenCV in contour detection.
 - It might be overcounting some of the barnacle because of irregular edges and nested boundaries.
-- While training the ML model, I considered the overlap of 5% for each candidate with the mask provided but this might accidentally think of background as barnacle if it overlaps with the thick outlines. Also other rocks similar to barnacle might be counted as barnacle.
+- While training the ML model, I considered the overlap of 5% for each candidate with the mask provided but this might accidentally think of the background as a barnacle if it overlaps with the thick outlines. Also other rocks similar to barnacle might be counted as barnacle.
 - The current code requires manual interaction during image cropping, so it is not yet fully automated.
 - Limited training data: it is trained on only two annotated images. With this it might not be able to fully understand all the barnacle features well, making it less reliable on images with different lighting, textures, or barnacle distributions.
 

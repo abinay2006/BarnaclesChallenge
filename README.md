@@ -3,6 +3,7 @@ This project uses computer vision and machine learning approach to automate barn
 
 # Files 
 - Images: All the images given of the barnacles and the masks
+- README: Project overview, setup instructions, and project documentation.
 - trial.py — Main script that runs the image processing, feature extraction, classification, and visualization.
   
 

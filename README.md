@@ -14,6 +14,9 @@ This project uses computer vision and machine learning approach to automate barn
 - scikit-learn
 - Matplotlib
 
+This can be done through the following line in the terminal:
+pip install opencv-python numpy scikit-learn matplotlib
+
 # How to run 
 1. Clone or download the repository.
 2. Install the dependencies listed above.

@@ -36,6 +36,7 @@ The main problem presented by the scientist is the high effort and time it takes
 # 2. Subtasks
 
 <img width="626" height="683" alt="Screenshot 2026-10-18 at 4 19 22 PM" src="https://github.com/user-attachments/assets/6d423f54-65fe-46e7-956c-5a20877edc10"/>
+
 # 3. Specific subtask and its performance 
 
 A key step in building this model is the machine learning classification model that will be used to classify future unseen images and determine the number of barnacles. The ML model will use the dataset of features and labels created by img1 and img 2 to train on whether something is a barnacle or not and use it to count barnacles in unseen images in later stages.

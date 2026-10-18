@@ -55,7 +55,7 @@ Since we were only provided with two masked images, the machine learning algorit
 After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2
  is shown below.
 
-   ## Performance on Image 2: ##
+   ## Performance on image 2: ##
    
 <img width="697" height="393" alt="Screenshot 2026-10-18 at 2 32 16 AM" src="https://github.com/user-attachments/assets/abaffae5-b829-450d-bddf-380e21dca342" />
 
@@ -94,11 +94,11 @@ We also have other unseen images that we can use the model to predict the number
 ## Limitations
 
 - The approach may perform differently across images due to variations in barnacle appearance, image quality, lighting, and background texture.
-- The approach may miss barnacles with faint or overlapping edges because the classifier can only identify candidates detected by OpenCV in contour detection.
+- The approach may miss barnacles with faint or overlapping edges because the classifier can only identify candidates detected by contour detection in OpenCV.
 - It might be overcounting some of the barnacle because of irregular edges and nested boundaries.
 - While training the ML model, I considered the overlap of 5% for each candidate with the mask provided but this might accidentally think of the background as a barnacle if it overlaps with the thick outlines. Also other rocks similar to barnacle might be counted as barnacle.
 - The current code requires manual interaction during image cropping, so it is not yet fully automated.
-- Limited training data: it is trained on only two annotated images. With this it might not be able to fully understand all the barnacle features well, making it less reliable on images with different lighting, textures, or barnacle distributions.
+- Limited training data: it is trained on only two annotated images. So, it might not be able to fully understand all the barnacle features well, making it less reliable on images with different lighting, textures, or barnacle distributions.
 
 # 6. Learning Process
 I greatly enjoyed working on this project and learned a lot of new things in the process. I was particularly excited to learn more about OpenCV functionality and see how it works. For example, I had not used the selectROI function before, but using it for this project made me realize its usefulness and importance, and I will implement it in future projects. 

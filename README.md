@@ -54,11 +54,11 @@ Since we were only provided with two masked images, the machine learning algorit
 After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2
  is shown below.
 
-   Performance on Image 2:
+   ## Performance on Image 2: ##
    
-<img width="879" height="496" alt="Screenshot 2026-10-18 at 2 31 39 AM" src="https://github.com/user-attachments/assets/b6cc1d0b-f469-4041-b187-cf9621c30fb2" />
+<img width="697" height="393" alt="Screenshot 2026-10-18 at 2 32 16 AM" src="https://github.com/user-attachments/assets/abaffae5-b829-450d-bddf-380e21dca342" />
 
-   Evaluation on image 2: 
+  ## Evaluation on image 2: ##
    
 <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 
@@ -68,7 +68,7 @@ We can also visually see that the ML algorithm performed worse at identifying ab
 
 We also have other unseen images that we can use the model to predict the number of barnacles in. However, we can't evaluate performance because we don’t have the labels (or masks) for them. Based on training on two data points (img1 and img2), my model predicted 821 barnacles for unseen image 1 and 96 barnacles for unseen image 2.
 	
-	Prediction on unseen images:	
+  ## Prediction on unseen images: ##
 <img width="817" height="421" alt="Screenshot 2026-10-18 at 2 31 12 AM" src="https://github.com/user-attachments/assets/95e6e267-2f92-4f8e-a3e2-3b32ef2ab6c1" />
 
 

@@ -37,6 +37,7 @@ I will develop a semi-autonomous system to detect the barnacles. To do so, I wil
 <img width="597" height="668" alt="Screenshot 2026-10-18 at 8 24 47 PM" src="https://github.com/user-attachments/assets/88aa244d-fa2d-4c81-8705-4f71769852a8" />
 
 Below are the specific characteristics of a barnacle used to create the training dataset, along with their average values.
+
 <img width="583" height="635" alt="Screenshot 2026-10-18 at 8 25 57 PM" src="https://github.com/user-attachments/assets/d53ec33d-9edc-4d31-bce3-3bc6448a7dc7" />
 
 # 3. Specific subtask and its performance 

@@ -108,11 +108,7 @@ contours2, X2, y2 = getShapes(crop2, maskCrop2)
 # 4. Train on image 1 and test on image 2 to evaluate performance
 
 #Implement random forest classifier
-model = RandomForestClassifier(
-    n_estimators=100,
-    class_weight='balanced',
-    random_state=42
-)
+model = RandomForestClassifier(n_estimators=100, class_weight='balanced', random_state=1)
 
 model.fit(X1, y1) #train
 pred2 = model.predict(X2) #test
@@ -135,14 +131,29 @@ labeledBarnacles = [
 cv.drawContours(showLabels, labeledBarnacles, -1, (255, 0, 0), 2)
 
 cv.imshow(f"Predicted barnacles: {len(labeledBarnacles)}",showLabels)
+print(f"Predicted barnacles in image 2: {len(labeledBarnacles)}")
 cv.waitKey(0)
 
 # 5. Train on both labeled images (1 and 2) for the unseen image detection
 xTrain = np.vstack([X1, X2])
 yTrain = np.concatenate([y1, y2])
 
+#look at mean characteristic values
 model.fit(xTrain, yTrain)
-
+featureNames = [
+    "Area",
+    "Circularity",
+    "Mean Blue",
+    "Mean Green",
+    "Mean Red",
+    "Mean Grayscale (Brightness)",
+    "Edge Density (Percent edges present)"
+]
+for name, meanValue in zip(featureNames, np.mean(X1, axis=0)):
+    print(f"{name}: {meanValue:.2f}")
+print("\n")
+for name, meanValue in zip(featureNames, np.mean(X2, axis=0)):
+    print(f"{name}: {meanValue:.2f}")
 
 # Prepare the candidates for the unseen images
 cropNew1, regionNew1 = crop(newImage1, "Select square in this new image 1")

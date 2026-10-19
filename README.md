@@ -36,7 +36,7 @@ I will develop a semi-autonomous system to detect the barnacles. To do so, I wil
 
 <img width="597" height="668" alt="Screenshot 2026-10-18 at 8 24 47 PM" src="https://github.com/user-attachments/assets/88aa244d-fa2d-4c81-8705-4f71769852a8" />
 
-Below are the specific characteristics of a barnacle used to create the training dataset, along with their average values.
+Below are the specific characteristics of a barnacle used to create the training dataset, along with their average values. The mean values help show the similarity in the features of the barnacle that the model is trained on.
 
 <img width="583" height="635" alt="Screenshot 2026-10-18 at 8 25 57 PM" src="https://github.com/user-attachments/assets/d53ec33d-9edc-4d31-bce3-3bc6448a7dc7" />
 
@@ -62,6 +62,11 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
 <img width="697" height="393" alt="Screenshot 2026-10-18 at 2 32 16 AM" src="https://github.com/user-attachments/assets/abaffae5-b829-450d-bddf-380e21dca342" />
 
   ## Evaluation of image 2: ##
+
+   Accuracy: 60%
+   Precision: 57%
+   Recall: 87%
+   F1 Score: 69%
    
 <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 

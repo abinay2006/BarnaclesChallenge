@@ -38,7 +38,7 @@ I will develop a semi-autonomous system to detect the barnacles. To do so, I wil
 
 Below are the specific characteristics of a barnacle used to create the training dataset, along with their average values. The mean values help show the similarity in the features of the barnacle that the model is trained on.
 
-<img width="583" height="635" alt="Screenshot 2026-10-18 at 8 25 57 PM" src="https://github.com/user-attachments/assets/d53ec33d-9edc-4d31-bce3-3bc6448a7dc7" />
+<img width="662" height="669" alt="Screenshot 2026-10-18 at 8 52 53 PM" src="https://github.com/user-attachments/assets/642c3cbc-1b08-491f-99cb-d31680acab89" />
 
 # 3. Specific subtask and its performance 
 
@@ -63,10 +63,14 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
 
   ## Evaluation of image 2: ##
 
-   Accuracy: 60%
-   Precision: 57%
-   Recall: 87%
-   F1 Score: 69%
+   Accuracy: 60% 
+   
+   Precision: 57% 
+   
+   Recall: 87% 
+   
+   F1 Score: 69% 
+   
    
 <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 

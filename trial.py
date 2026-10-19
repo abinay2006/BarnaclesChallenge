@@ -138,10 +138,10 @@ cv.imshow(f"Predicted barnacles: {len(labeledBarnacles)}",showLabels)
 cv.waitKey(0)
 
 # 5. Train on both labeled images for the unseen image
-x_train = np.vstack([X1, X2])
-y_train = np.concatenate([y1, y2])
+xTrain = np.vstack([X1, X2])
+yTrain = np.concatenate([y1, y2])
 
-model.fit(x_train, y_train)
+model.fit(xTrain, yTrain)
 
 
 # Extract unseen-image candidates
@@ -186,4 +186,22 @@ for ax in axes:
 plt.suptitle("Unseen image predictions")
 plt.tight_layout()
 plt.show()
+
+featureNames = [
+    "Area",
+    "Circularity",
+    "Mean Blue",
+    "Mean Green",
+    "Mean Red",
+    "Mean Grayscale",
+    "Edge Density"
+]
+
+print("For trianing dataset 1")
+for name, meanValue in zip(featureNames, np.mean(X1, axis=0)):
+    print(f"{name}: {meanValue:.3f}")
+
+print("For trianing dataset 2")
+for name, meanValue in zip(featureNames, np.mean(X2, axis=0)):
+    print(f"{name}: {meanValue:.3f}")
 

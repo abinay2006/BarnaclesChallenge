@@ -30,7 +30,7 @@ The trial.py file contains all the code to run this prototype. The output of thi
 
 The main problem presented by the scientist is the high effort and time it takes to manually count the barnacles in an image. Thus, we can automate this process using image analysis tools, such as OpenCV and machine learning algorithms. 
 
-I will develop a semi-autonomous system to detect the barnacles. To do so, I will first use OpenCV to break down the image and crop to the desired portion (inside the green border). Then I will Determining the different shapes present in the image and look at each of them for different characteristics like the shape, color, and texture. Then, using the masked image provided, I will generate the output label of whether a particular shape is barnacle or not. This will be used to train the supervised Machine Learning algorithm. Finally, I will test the ML model on the image provided to see its performance and then also test on the unseen images to determine the number of barnacles present there.
+I will develop a semi-autonomous system to detect the barnacles. To do so, I will first use OpenCV to break down the image and crop to the desired portion (inside the green border). Then I will determine the different shapes present in the image and look at each of them for different characteristics like the shape, color, and texture. Then, using the masked image provided, I will generate the output label of whether a particular shape is a barnacle or not. This will be used to train the supervised Machine Learning algorithm. Finally, I will test the ML model on the image provided to see its performance and then also test on the unseen images to determine the number of barnacles present there.
 
 # 2. Subtasks
 
@@ -51,54 +51,44 @@ Since we were only provided with two masked images, the machine learning algorit
 
 # 4. Prototype Analysis
 
-My prototype demonstrates that this semi-autonomous approach of combining computer vision techniques with machine learning is worth pursuing to automate parts of barnacle image analysis. We can see that by extracting features such as area, circularity, color, grayscale intensity, and edge density, the algorithm has key characteristics to distinguish between regions. However, it’s important to note that the performance varies across images and the way the images are cropped using the selectROI method.
-
-After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2 is shown below.
+After tuning a few parameters and testing a few ML algorithms, I chose Random Forest as it performed the best. The detection and performance calculated based on img2 are shown below.
 
    ## Performance on image 2: ##
    
 <img width="697" height="393" alt="Screenshot 2026-10-18 at 2 32 16 AM" src="https://github.com/user-attachments/assets/abaffae5-b829-450d-bddf-380e21dca342" />
 
-  ## Evaluation on image 2: ##
+  ## Evaluation of image 2: ##
    
 <img width="449" height="133" alt="Screenshot 2026-10-18 at 1 47 04 AM" src="https://github.com/user-attachments/assets/606ddaf5-fd19-436b-bdae-85ee56d9804e" />
 
-Focusing on the row with Barnacle detection performance, we can see that the model’s accuracy is at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. 
+From the performance on image 2, we can also visually see that the ML algorithm performed worse at identifying barnacles than the actual labeled dataset. This is probably because we trained the model on only one data point, image 1. But if we add more data, accuracy will also increase. 
+In the evaluation of image 2, we can see that the model’s accuracy is at 60%. Looking at the precision and recall, we can see that the recall is high, meaning it is able to detect most of the barnacles. However, the precision is low, meaning it also detects things that are not barnacles (e.g., background) as barnacles. To improve the system, we would have to improve the recall. Some possible ways could be to add more features for the barnacle characteristics or better tune the parameters. 
 
-We can also visually see that the ML algorithm performed worse at identifying abrnacles than the actual labeled dataset. This is probably because we trained the model on only one data point, image 1. But if we add more data, accuracy will also increase. 
-
-We also have other unseen images that we can use the model to predict the number of barnacles in. However, we can't evaluate performance because we don’t have the labels (or masks) for them. Based on training on two data points (img1 and img2), my model predicted 821 barnacles for unseen image 1 and 96 barnacles for unseen image 2.
+We also have other unseen images that we can use the model to predict the number of barnacles. However, we can't evaluate performance because we don’t have the labels (or masks) for them. Based on training on two data points (img1 and img2), the image below shows that my model predicted 821 barnacles for unseen image 1 and 96 barnacles for unseen image 2. Visually, we can see that it has performed well in these two images after being trained on two image datasets.
 	
   ## Prediction on unseen images: ##
 <img width="817" height="421" alt="Screenshot 2026-10-18 at 2 31 12 AM" src="https://github.com/user-attachments/assets/95e6e267-2f92-4f8e-a3e2-3b32ef2ab6c1" />
 
 
 # 5. Conclusion
-- Barnacles have specific features that can be used as data points for their identification, including their circularity, color, brightness, and number of edges. 
-- To scale up this project, automation of a highly accurate model would be needed.
-- A few issues with my model making it hard to pursue
-	- Accuracy is too low (probably can be increased if more training data and labels are present)
-	- Requires cropping to the desired region manually for each image
 
-- Possible solution: manually cropping to the desired region for each image isn't realistic if the number of data points increases to thousands or millions.
-	- We would need automatic detection of the cropped region for all training data by using the already cropped mask provided. Then cropping would only be required for additional unseen (test) images.
-	- The greater the amount of data, the higher the accuracy!
-	- Test tuning parameters on the machine learning algorithms to further improve accuracy, or try contemporary algorithms (e.g., BERT, ELM).
+My prototype demonstrates that this semi-autonomous approach of combining computer vision techniques with machine learning is worth pursuing to automate parts of barnacle image analysis. We can see that by extracting features such as area, circularity, color, grayscale intensity, and edge density, the algorithm has key characteristics to distinguish between regions. However, it’s important to note that the performance varies across images and with the way the images are cropped using the selectROI method.
+Instead of the scientists manually analyzing every region, the system could identify likely barnacle regions and prioritize uncertain predictions for human review.
 
-- My current approach works for a small amount of data where a human can look at all the images and crop to the area of interest. Additionally, we can consider more factors that would be unique to a barnacle to improve the accuracy further, such as texture or standard deviation of the colors and brightness. 
-- Human feedback on the model would be crucial because it would help refine the model further as it learns from it. For example
-	- Once the model predicts possible barnacle candidates, a human can review them and reject false positives or add missed ones. This is especially important for barnacles in close proximity that seem hierarchical and harder to detect.
-	- For images with bad lighting or blurry images, a human can better identify missed barnacles.
-	- If specific information about barnacle measurements or their clustering behavior is known, it could be added as an additional factor for the model to consider and test.
+Barnacles have distinct visual features, including circularity, color, brightness, and edge density, that can serve as useful data points for their identification. My current prototype has limited accuracy, but training on a larger dataset with more labeled examples could improve it. In order to scale this project, the accuracy would need to be increased. This can be done in various ways, such as human intervention, better training, and tuning.
+Additionally, the need to manually crop the desired region in each image limits the system’s efficiency and scalability. Therefore, while the approach shows potential for automating barnacle identification, improving classification accuracy and automating region selection would be essential before it could reliably reduce scientists’ workloads.
+
+To make this approach more scalable as the number of images (data points) increases, the system should automatically detect the desired region in each image rather than requiring manual cropping. Increasing the amount of labeled training data could also improve classification accuracy. Additionally, tuning the machine learning algorithms' hyperparameters and trying more advanced, contemporary machine learning models like BERT or ELM could further improve performance. Additionally, we can consider more factors that would be unique to a barnacle to improve the accuracy further, such as texture or aspect ratio of a barnacle.
+
+Human feedback would also be crucial for refining the model over time. Once the model identifies potential barnacle candidates, a human can review the predictions, reject false positives, and add missed barnacles to improve future predictions. This would be especially important for barnacles clustered closely together and hard to detect. Human review could also help identify missed barnacles in blurry images or images with bad lighting. 
+
 
 ## Limitations
 
-- The approach may perform differently across images due to variations in barnacle appearance, image quality, lighting, and background texture.
-- The approach may miss barnacles with faint or overlapping edges because the classifier can only identify candidates detected by contour detection in OpenCV.
-- It might be overcounting some of the barnacle because of irregular edges and nested boundaries.
-- While training the ML model, I considered the overlap of 5% for each candidate with the mask provided but this might accidentally think of the background as a barnacle if it overlaps with the thick outlines. Also other rocks similar to barnacle might be counted as barnacle.
-- The current code requires manual interaction during image cropping, so it is not yet fully automated.
-- Limited training data: it is trained on only two annotated images. So, it might not be able to fully understand all the barnacle features well, making it less reliable on images with different lighting, textures, or barnacle distributions.
+The approach may perform differently on different images due to variations in barnacle appearance, image quality, lighting, and background texture. Since the classifier can only identify candidates detected through OpenCV contour detection, it may miss barnacles with faint or overlapping edges. Also, it might overcount the number of barnacles due to irregular edges and nested boundaries. During training, I considered all candidates with at least 5% overlap with the provided mask to be potential barnacles. However, this threshold may cause background regions to be wrongly identified as barnacles if they overlap with the thick mask outlines. Rocks and other objects with similar visual characteristics may also be incorrectly identified. 
+
+Additionally, the model was trained on only two annotated images, making it hard to learn all the different barnacle characteristics and reducing its reliability on images with different lighting conditions, textures, or barnacle distributions. Finally, the current implementation requires manual cropping of the region of interest for each image, which produces slightly different results each time and limits its scalability.
+
 
 # 6. Learning Process
 I greatly enjoyed working on this project and learned a lot of new things in the process. I was particularly excited to learn more about OpenCV functionality and see how it works. For example, I had not used the selectROI function before, but using it for this project made me realize its usefulness and importance, and I will implement it in future projects. 

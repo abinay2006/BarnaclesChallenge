@@ -30,7 +30,7 @@ The trial.py file contains all the code to run this prototype. The output of thi
 
 The main problem presented by the scientist is the high effort and time it takes to manually count the barnacles in an image. Thus, we can automate this process using image analysis tools, such as OpenCV and machine learning algorithms. 
 
-I will develop a semi-autonomous system to detect the barnacles. To do so, I will first use OpenCV to break down the image and crop to the desired portion (inside the green border). Then I will determine the different shapes present in the image and look at each of them for different characteristics like the shape, color, and texture. Then, using the masked image provided, I will generate the output label of whether a particular shape is a barnacle or not. This will be used to train the supervised Machine Learning algorithm. Finally, I will test the ML model on the image provided to see its performance and then also test on the unseen images to determine the number of barnacles present there.
+I will develop a semi-autonomous system to detect the barnacles. To do so, I will first use OpenCV to break down the image and crop to the desired portion (inside the green border). Then I will determine the different shapes present in the image and look at each of them for different characteristics like the shape, color, and texture. Then, using the masked image provided, I will generate the output label indicating whether a particular shape is a barnacle or not. This will be used to train the supervised Machine Learning algorithm. Finally, I will test the ML model on the image provided to see its performance and then also test on the unseen images to determine the number of barnacles present there.
 
 # 2. Subtasks
 
@@ -45,7 +45,7 @@ To evaluate the model's performance, I can use the classification_report functio
 The accuracy would help me evaluate how well the model was trained and is performing on unseen data to gauge its usefulness. Precision will help determine the trustworthiness of our "yes" labels (whether the contours predicted to be barnacles are actually barnacles or whether the model incorrectly judges other objects as barnacles too).
 Recall will help in determining how well the model finds all the correct "yes" cases (barnacles) present in the data. F1 score is a good metric because it balances recall and precision, since it is the harmonic mean of the two values. These would help guide parameter tuning depending on which value is low/high.
 
-After running the model on unseen data, I can manually compare how many barnacles are highlighted with the actual number present in the image and use metrics (precision, recall, and F1 score) to assess overall performance.
+After running the model on unseen data, I can compare how many barnacles are highlighted with the actual number present in the image and use metrics (precision, recall, and F1 score) to assess overall performance.
 
 Since we were only provided with two masked images, the machine learning algorithm has very limited data, so it will not perform that well. We can still calculate precision, recall, and F1 by training on img 1 and testing on img 2 because we can create output labels for both. However, this is very limited data, and having more would improve accuracy and lead to better predictions.
 

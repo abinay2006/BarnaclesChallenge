@@ -42,7 +42,7 @@ Below are the specific characteristics of a barnacle used to create the training
 
 # 3. Specific subtask and its performance 
 
-A key step in building this model is the machine learning classification model that will be used to classify future unseen images and determine the number of barnacles. The ML model will use the dataset of features and labels created by img1 and img 2 to train on whether something is a barnacle or not and use it to count barnacles in unseen images in later stages.
+A key step in building this model is the machine learning classification model that will be used to classify future unseen images and determine the number of barnacles. Thus, I am focusing on subtask 5, where the ML model will use the dataset of features and labels created by img1 and img 2 to train on whether something is a barnacle or not and use it to count barnacles in unseen images in later stages.
 
 To evaluate the model's performance, I can use the classification_report function in the Python scikit-learn library. This gives important metrics such as accuracy, precision, recall, and F1 score. 
 
@@ -63,12 +63,11 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
 
   ## Evaluation of image 2: ##
 
+Performance of Barnacle Detection:
+
    Accuracy: 60% 
-   
    Precision: 57% 
-   
    Recall: 87% 
-   
    F1 Score: 69% 
    
    

@@ -66,8 +66,11 @@ After tuning a few parameters and testing a few ML algorithms, I chose Random Fo
 Performance of Barnacle Detection:
 
    Accuracy: 60% 
+   
    Precision: 57% 
+   
    Recall: 87% 
+   
    F1 Score: 69% 
    
    

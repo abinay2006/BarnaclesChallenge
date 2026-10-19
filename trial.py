@@ -76,7 +76,7 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
         grayPart = gray[y:y+h, x:x+w] #gray
         edgePart = edges[y:y+h, x:x+w] #edge or not
 
-        perimeter = cv.arcLength(contour, True)
+        perimeter = cv.arcLength(contour, True) #to make sure denom is not 0
 
         circularity = 0
         if perimeter > 0:
@@ -95,7 +95,7 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
         # Determine the y labael based on overlap with annotated outlines
         if mask is not None:
             outlineRegion = outline[y:y+h, x:x+w] #get the appropridate region of mask for each contour
-            overlap = np.mean(outlineRegion > 0) #see if there is there a outline line there?
+            overlap = np.mean(outlineRegion > 0) #see if there is a outline line there
             label.append(1 if overlap > 0.05 else 0)
 
     return data, np.array(features), (
@@ -105,7 +105,7 @@ def getShapes(img, mask=None): #the two images have the mask to detect barnacles
 contours1, X1, y1 = getShapes(crop1, maskCrop1)
 contours2, X2, y2 = getShapes(crop2, maskCrop2)
 
-# 4. Train on image 1 and evaluate on image 2 to check the metrics
+# 4. Train on image 1 and test on image 2 to evaluate performance
 
 #Implement random forest classifier
 model = RandomForestClassifier(
@@ -137,14 +137,14 @@ cv.drawContours(showLabels, labeledBarnacles, -1, (255, 0, 0), 2)
 cv.imshow(f"Predicted barnacles: {len(labeledBarnacles)}",showLabels)
 cv.waitKey(0)
 
-# 5. Train on both labeled images for the unseen image
+# 5. Train on both labeled images (1 and 2) for the unseen image detection
 xTrain = np.vstack([X1, X2])
 yTrain = np.concatenate([y1, y2])
 
 model.fit(xTrain, yTrain)
 
 
-# Extract unseen-image candidates
+# Prepare the candidates for the unseen images
 cropNew1, regionNew1 = crop(newImage1, "Select square in this new image 1")
 cropNew2, regionNew2 = crop(newImage2, "Select square in this new image 2")
 
@@ -186,22 +186,3 @@ for ax in axes:
 plt.suptitle("Unseen image predictions")
 plt.tight_layout()
 plt.show()
-
-featureNames = [
-    "Area",
-    "Circularity",
-    "Mean Blue",
-    "Mean Green",
-    "Mean Red",
-    "Mean Grayscale",
-    "Edge Density"
-]
-
-print("For trianing dataset 1")
-for name, meanValue in zip(featureNames, np.mean(X1, axis=0)):
-    print(f"{name}: {meanValue:.3f}")
-
-print("For trianing dataset 2")
-for name, meanValue in zip(featureNames, np.mean(X2, axis=0)):
-    print(f"{name}: {meanValue:.3f}")
-
